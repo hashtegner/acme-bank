@@ -9,6 +9,7 @@ defmodule AcmeBank.Application do
     children = [
       # Starts a worker by calling: AcmeBank.Worker.start_link(arg)
       # {AcmeBank.Worker, arg}
+      AcmeBank.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
