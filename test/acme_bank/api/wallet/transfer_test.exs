@@ -2,7 +2,7 @@ defmodule AcmeBank.Api.Wallet.TransferTest do
   use AcmeBank.ConnCase
   alias AcmeBank.Api.Router
   alias AcmeBank.Wallet.Transaction
-  alias AcmeBank.WalletMock
+  alias AcmeBank.{AuthMock, WalletMock}
 
   @opts Router.init([])
 
@@ -31,6 +31,9 @@ defmodule AcmeBank.Api.Wallet.TransferTest do
       updated_at: NaiveDateTime.utc_now()
     }
 
+    AuthMock
+    |> expect(:verify_token, fn _ -> {:ok, %{account: "123"}} end)
+
     WalletMock
     |> expect(:transfer_money, fn %{
                                     "source_account_id" => "abc-123",
@@ -56,6 +59,9 @@ defmodule AcmeBank.Api.Wallet.TransferTest do
     params = %{}
     errors = %{amount_cents: [%{msg: "invalid", rules: [%{validation: :required}]}]}
 
+    AuthMock
+    |> expect(:verify_token, fn _ -> {:ok, %{account: "123"}} end)
+
     WalletMock
     |> expect(:transfer_money, fn %{} ->
       {:error, errors}
@@ -69,5 +75,16 @@ defmodule AcmeBank.Api.Wallet.TransferTest do
 
     assert conn.resp_body ==
              Jason.encode!(%{errors: errors})
+  end
+
+  test "invalid access token" do
+    AuthMock
+    |> expect(:verify_token, fn _ -> {:error, :invalid_access_token} end)
+
+    conn =
+      conn(:post, "/wallets/transfer")
+      |> Router.call(@opts)
+
+    assert conn.status == 401
   end
 end

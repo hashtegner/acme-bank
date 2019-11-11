@@ -4,12 +4,19 @@ defmodule AcmeBank.Api.Router do
   alias AcmeBank.Api.Accounts.Create, as: AccountCreate
   alias AcmeBank.Api.{Health, WalletRouter}
 
+  plug(:match)
+  plug(:dispatch)
+
   get("/health", to: Health)
   post("/accounts", to: AccountCreate)
 
   forward("/wallets", to: WalletRouter)
 
-  def handle_errors(conn, %{kind: _kind, reason: _reason, stack: _stack}) do
+  match _ do
+    send_resp(conn, 404, "Not found")
+  end
+
+  def handle_errors(conn, _) do
     send_resp(conn, conn.status, "Something went wrong")
   end
 end

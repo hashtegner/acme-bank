@@ -12,7 +12,7 @@ defmodule AcmeBank.Api.Auth do
     else
       _ ->
         conn
-        |> put_status(401)
+        |> send_resp(401, "Unauthorized")
         |> halt()
     end
   end

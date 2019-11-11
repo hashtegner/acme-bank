@@ -2,7 +2,7 @@ defmodule AcmeBank.Api.Wallet.PlaceMoneyTest do
   use AcmeBank.ConnCase
   alias AcmeBank.Api.Router
   alias AcmeBank.Wallet.Transaction
-  alias AcmeBank.WalletMock
+  alias AcmeBank.{AuthMock, WalletMock}
 
   @opts Router.init([])
 
@@ -21,6 +21,9 @@ defmodule AcmeBank.Api.Wallet.PlaceMoneyTest do
       updated_at: NaiveDateTime.utc_now()
     }
 
+    AuthMock
+    |> expect(:verify_token, fn _ -> {:ok, %{account: "123"}} end)
+
     WalletMock
     |> expect(:place_money, fn %{
                                  "account_id" => "abc-456",
@@ -29,8 +32,9 @@ defmodule AcmeBank.Api.Wallet.PlaceMoneyTest do
       {:ok, transaction}
     end)
 
-    conn = conn(:post, "/wallets/place", params)
-    conn = Router.call(conn, @opts)
+    conn =
+      conn(:post, "/wallets/place", params)
+      |> Router.call(@opts)
 
     assert conn.status == 200
 
@@ -41,6 +45,9 @@ defmodule AcmeBank.Api.Wallet.PlaceMoneyTest do
     errors = %{
       amount_cents: [%{msg: "invalid", rules: [%{validation: :required}]}]
     }
+
+    AuthMock
+    |> expect(:verify_token, fn _ -> {:ok, %{account: "123"}} end)
 
     WalletMock
     |> expect(:place_money, fn %{} ->
@@ -53,5 +60,16 @@ defmodule AcmeBank.Api.Wallet.PlaceMoneyTest do
     assert conn.status == 400
 
     assert conn.resp_body == Jason.encode!(%{errors: errors})
+  end
+
+  test "invalid access token" do
+    AuthMock
+    |> expect(:verify_token, fn _ -> {:error, :invalid_access_token} end)
+
+    conn =
+      conn(:post, "/wallets/place")
+      |> Router.call(@opts)
+
+    assert conn.status == 401
   end
 end
