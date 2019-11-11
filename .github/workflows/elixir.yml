@@ -15,11 +15,6 @@ jobs:
         ports:
           - 5432:5432
 
-    env:
-      DB_HOST: postgres
-      DB_PORT: ${{ job.services.postgres.ports[5432] }}
-      MIX_ENV: test
-
     steps:
       - uses: actions/checkout@v1
       - name: Install Dependencies
@@ -31,5 +26,14 @@ jobs:
         run: |
           mix ecto.create
           mix ecto.migrate
+        env:
+          DB_HOST: postgres
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          MIX_ENV: test
+
       - name: Run Tests
         run: mix test
+        env:
+          DB_HOST: postgres
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          MIX_ENV: test
