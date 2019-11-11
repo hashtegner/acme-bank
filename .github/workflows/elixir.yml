@@ -1,0 +1,35 @@
+name: Elixir CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: elixir:1.9.1-slim
+
+    services:
+      postgres:
+        image: postgres:12-alpine
+        ports:
+          - 5432:5432
+
+    env:
+      DB_HOST: postgres
+      DB_PORT: ${{ job.services.postgres.ports[5432] }}
+      MIX_ENV: test
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Dependencies
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+      - name: Run db migrations
+       run: |
+          mix ecto.create
+          mix ecto.migrate
+      - name: Run Tests
+        run: mix test
