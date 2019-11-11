@@ -1,6 +1,7 @@
 import Config
 
 config :acme_bank, :accounts_service, AcmeBank.AccountsMock
+config :acme_bank, :auth_service, AcmeBank.AuthMock
 config :acme_bank, :wallet_service, AcmeBank.WalletMock
 
 config :acme_bank, AcmeBank.Repo,
