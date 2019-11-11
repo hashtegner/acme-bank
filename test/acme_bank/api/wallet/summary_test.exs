@@ -9,7 +9,7 @@ defmodule AcmeBank.Api.Wallet.SummaryTest do
     account_id = "abc-123"
 
     WalletMock
-    |> expect(:summary, fn "abc-123" -> {:ok, 129_90} end)
+    |> expect(:summary, fn "abc-123" -> {:ok, 12_990} end)
 
     conn = conn(:get, "/wallets/summary", %{account_id: account_id})
     conn = Router.call(conn, @opts)
@@ -17,7 +17,7 @@ defmodule AcmeBank.Api.Wallet.SummaryTest do
     assert conn.status == 200
 
     assert conn.resp_body ==
-             Jason.encode!(%{account_id: account_id, amount_cents: 129_90})
+             Jason.encode!(%{account_id: account_id, amount_cents: 12_990})
   end
 
   test "invalid request" do

@@ -1,8 +1,8 @@
 defmodule AcmeBank.Api.Wallet.TransferTest do
   use AcmeBank.ConnCase
   alias AcmeBank.Api.Router
-  alias AcmeBank.WalletMock
   alias AcmeBank.Wallet.Transaction
+  alias AcmeBank.WalletMock
 
   @opts Router.init([])
 
@@ -10,14 +10,12 @@ defmodule AcmeBank.Api.Wallet.TransferTest do
     params = %{
       source_account_id: "abc-123",
       destination_account_id: "abc-456",
-      amount_cents: 159_90,
-      id: "uuid-123",
-      inserted_at: NaiveDateTime.utc_now(),
-      updated_at: NaiveDateTime.utc_now()
+      amount_cents: 15_990,
+      id: "uuid-123"
     }
 
     transaction_a = %Transaction{
-      amount_cents: -159_90,
+      amount_cents: -15_990,
       type: :transfer,
       account_id: "abc-123",
       id: "uuid-456",
@@ -26,9 +24,11 @@ defmodule AcmeBank.Api.Wallet.TransferTest do
     }
 
     transaction_b = %Transaction{
-      amount_cents: 159_90,
+      amount_cents: 15_990,
       type: :transfer,
-      account_id: "abc-456"
+      account_id: "abc-456",
+      inserted_at: NaiveDateTime.utc_now(),
+      updated_at: NaiveDateTime.utc_now()
     }
 
     WalletMock

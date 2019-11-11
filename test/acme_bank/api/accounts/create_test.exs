@@ -1,8 +1,8 @@
 defmodule AcmeBank.Api.Accounts.CreateTest do
   use AcmeBank.ConnCase
-  alias AcmeBank.Api.Router
-  alias AcmeBank.AccountsMock
   alias AcmeBank.Accounts.Account
+  alias AcmeBank.AccountsMock
+  alias AcmeBank.Api.Router
 
   @opts Router.init([])
 
