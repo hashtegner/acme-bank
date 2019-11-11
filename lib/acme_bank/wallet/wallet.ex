@@ -9,6 +9,22 @@ defmodule AcmeBank.Wallet do
 
   @behaviour WalletBehaviour
 
+  @doc ~S"""
+  Place money in account
+
+  ## Examples
+    iex> Wallet.place_money(%{account_id: "7738fdf8-f00f-4cb3-ab5f-da9dec21f666", amount_cents: 10000})
+    {:ok,
+      %AcmeBank.Wallet.Transaction{
+      account: #Ecto.Association.NotLoaded<association :account is not loaded>,
+      account_id: "7738fdf8-f00f-4cb3-ab5f-da9dec21f666",
+      amount_cents: 10000,
+      id: "038a8070-c6cd-452a-825b-545fabe21e01",
+      inserted_at: ~N[2019-11-11 13:10:48],
+      type: :place,
+      updated_at: ~N[2019-11-11 13:10:48]
+    }}
+  """
   def place_money(params \\ %{}) do
     Multi.new()
     |> Multi.insert(:transaction, Transaction.place_money_changeset(params))
@@ -20,6 +36,33 @@ defmodule AcmeBank.Wallet do
     end
   end
 
+  @doc ~S"""
+  Transfer money between accounts
+
+  ## Examples
+    iex> Wallet.transfer_money(%{source_account_id: "7738fdf8-f00f-4cb3-ab5f-da9dec21f666", destination_account_id: "1d6206e6-9736-44ef-adb0-11b6d4ed9057", amount_cents: 2000})
+    {:ok,
+      %AcmeBank.Wallet.Transaction{
+        __meta__: #Ecto.Schema.Metadata<:loaded, "transactions">,
+        account: #Ecto.Association.NotLoaded<association :account is not loaded>,
+        account_id: "7738fdf8-f00f-4cb3-ab5f-da9dec21f666",
+        amount_cents: -2000,
+        id: "ae5f3049-5c86-439f-9749-51db98e1fc64",
+        inserted_at: ~N[2019-11-11 13:18:49],
+        type: :transfer,
+        updated_at: ~N[2019-11-11 13:18:49]
+      },
+      %AcmeBank.Wallet.Transaction{
+        __meta__: #Ecto.Schema.Metadata<:loaded, "transactions">,
+        account: #Ecto.Association.NotLoaded<association :account is not loaded>,
+        account_id: "1d6206e6-9736-44ef-adb0-11b6d4ed9057",
+        amount_cents: 2000,
+        id: "6a359af1-dfe2-45f0-a487-1bef6cadb107",
+        inserted_at: ~N[2019-11-11 13:18:49],
+        type: :transfer,
+        updated_at: ~N[2019-11-11 13:18:49]
+    }}
+  """
   def transfer_money(params \\ %{}) do
     Multi.new()
     |> Multi.run(:transfer, fn _, _ -> Transfer.changeset(params) end)
