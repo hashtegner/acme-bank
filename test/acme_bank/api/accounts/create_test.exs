@@ -1,7 +1,7 @@
 defmodule AcmeBank.Api.Accounts.CreateTest do
   use AcmeBank.ConnCase
   alias AcmeBank.Accounts.Account
-  alias AcmeBank.AccountsMock
+  alias AcmeBank.AuthMock
   alias AcmeBank.Api.Router
 
   @opts Router.init([])
@@ -14,8 +14,8 @@ defmodule AcmeBank.Api.Accounts.CreateTest do
       updated_at: NaiveDateTime.utc_now()
     }
 
-    AccountsMock
-    |> expect(:create_account, fn %{"name" => "My Account"} -> {:ok, account} end)
+    AuthMock
+    |> expect(:sign_up, fn %{"name" => "My Account"} -> {:ok, account, "abc"} end)
 
     conn = conn(:post, "/accounts", %{name: "My Account"})
 
@@ -24,7 +24,10 @@ defmodule AcmeBank.Api.Accounts.CreateTest do
     assert conn.status == 200
 
     assert conn.resp_body ==
-             Jason.encode!(Map.take(account, [:id, :name, :inserted_at, :updated_at]))
+             Jason.encode!(%{
+               account: Map.take(account, [:id, :name, :inserted_at, :updated_at]),
+               access_token: "abc"
+             })
   end
 
   test "invalid request" do
@@ -32,8 +35,8 @@ defmodule AcmeBank.Api.Accounts.CreateTest do
       name: [%{msg: "is required", rules: %{validation: :requierd}}]
     }
 
-    AccountsMock
-    |> expect(:create_account, fn %{} -> {:error, errors} end)
+    AuthMock
+    |> expect(:sign_up, fn %{} -> {:error, errors} end)
 
     conn = conn(:post, "/accounts")
 
