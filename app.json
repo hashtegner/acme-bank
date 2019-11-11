@@ -1,0 +1,12 @@
+{
+  "name": "Acme Bank",
+  "repository": "https://github.com/alesshh/acme-bank",
+  "keywords": [],
+  "stack": "container",
+  "env": {
+    "SECRET_KEY": {
+      "description": "App secret key",
+      "value": "true"
+    }
+  }
+}
