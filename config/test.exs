@@ -8,6 +8,7 @@ config :acme_bank, AcmeBank.Repo,
   database: "acme_bank_repo_test",
   username: "postgres",
   password: "",
-  hostname: "localhost",
+  port: System.get_env("DB_PORT", "5432") |> String.to_integer(),
+  hostname: System.get_env("DB_HOST", "localhost"),
   pool: Ecto.Adapters.SQL.Sandbox,
   log: false
