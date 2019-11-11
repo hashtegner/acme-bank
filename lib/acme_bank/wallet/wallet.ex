@@ -1,4 +1,5 @@
 defmodule AcmeBank.Wallet do
+  alias AcmeBank.Accounts
   alias AcmeBank.Accounts.Account
   alias AcmeBank.Kit.Changeset
   alias AcmeBank.{Repo, WalletBehaviour}
@@ -33,6 +34,22 @@ defmodule AcmeBank.Wallet do
     |> case do
       {:ok, %{transaction: transaction}} -> {:ok, transaction}
       {:error, :transaction, changeset, _} -> {:error, Changeset.traverse_errors(changeset)}
+    end
+  end
+
+  @doc ~S"""
+  Check current wallet summary
+
+  ## Examples
+    iex> Wallet.summary("7738fdf8-f00f-4cb3-ab5f-da9dec21f666")
+    {:ok, 129_000}
+  """
+  def summary(account_id) do
+    account = Accounts.get_account(account_id)
+
+    case account do
+      %{current_wallet_cents: current_wallet_cents} -> {:ok, current_wallet_cents}
+      nil -> {:error, 0}
     end
   end
 

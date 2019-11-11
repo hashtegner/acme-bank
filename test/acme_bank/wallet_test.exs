@@ -252,4 +252,20 @@ defmodule AcmeBank.WalletTest do
              }
     end
   end
+
+  describe "summary/1" do
+    test "wallet summary for existent account" do
+      {:ok, account} = Accounts.create_account(%{name: "My Account"})
+      {:ok, _} = Wallet.place_money(%{account_id: account.id, amount_cents: 150_000})
+
+      response = Wallet.summary(account.id)
+      assert {:ok, 150_000} == response
+    end
+
+    test "account does not exists" do
+      response = Wallet.summary(UUID.generate())
+
+      assert {:error, 0} == response
+    end
+  end
 end
