@@ -1,4 +1,4 @@
-defmodule AcmeBank.AccountsBehavior do
+defmodule AcmeBank.AccountsBehaviour do
   @callback create_account(Map.t()) ::
               {:ok, AcmeBank.Accounts.Account.t()} | {:error, AcmeBank.Kit.Changeset.errors()}
 

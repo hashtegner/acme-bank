@@ -4,7 +4,7 @@ defmodule AcmeBank.Accounts do
   alias AcmeBank.Repo
   alias Ecto.UUID
 
-  @behaviour AcmeBank.AccountsBehavior
+  @behaviour AcmeBank.AccountsBehaviour
 
   @doc ~S"""
   Create a new account
