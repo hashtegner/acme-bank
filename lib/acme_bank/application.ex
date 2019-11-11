@@ -9,6 +9,7 @@ defmodule AcmeBank.Application do
     children = [
       # Starts a worker by calling: AcmeBank.Worker.start_link(arg)
       # {AcmeBank.Worker, arg}
+      {Plug.Cowboy, scheme: :http, plug: AcmeBank.Api.Router, options: [port: 4001]},
       AcmeBank.Repo
     ]
 
