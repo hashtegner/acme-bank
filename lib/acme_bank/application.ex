@@ -6,13 +6,12 @@ defmodule AcmeBank.Application do
   use Application
 
   def start(_type, _args) do
+    port = Application.fetch_env!(:acme_bank, :port)
+
     children = [
       # Starts a worker by calling: AcmeBank.Worker.start_link(arg)
       # {AcmeBank.Worker, arg}
-      {Plug.Cowboy,
-       scheme: :http,
-       plug: AcmeBank.Api.Router,
-       options: [port: System.get_env("PORT", "4001") |> String.to_integer()]},
+      {Plug.Cowboy, scheme: :http, plug: AcmeBank.Api.Router, options: [port: port]},
       AcmeBank.Repo
     ]
 

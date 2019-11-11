@@ -1,5 +1,6 @@
 import Config
 
+config :acme_bank, :port, System.get_env("PORT", "4001") |> String.to_integer()
 config :acme_bank, :accounts_service, AcmeBank.Accounts
 config :acme_bank, :wallet_service, AcmeBank.Wallet
 config :acme_bank, :auth_service, AcmeBank.Auth
