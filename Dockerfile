@@ -7,6 +7,8 @@ COPY . ./
 RUN mix local.rebar --force && \
     mix local.hex --force
 
+RUN mix deps.get
+
 ENV MIX_ENV=prod
 RUN mix release --force
 
