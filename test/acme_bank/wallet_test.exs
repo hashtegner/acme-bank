@@ -8,12 +8,12 @@ defmodule AcmeBank.WalletTest do
     test "creates a transaction" do
       {:ok, account} = Accounts.create_account(%{name: "My account"})
 
-      params = %{account_id: account.id, amount_cents: 19990}
+      params = %{account_id: account.id, amount_cents: 19_990}
       response = Wallet.place_money(params)
 
       assert {:ok, transaction} = response
       assert transaction.id != nil
-      assert transaction.amount_cents == 19990
+      assert transaction.amount_cents == 19_990
       assert transaction.account_id == account.id
       assert transaction.type == :place
     end
@@ -21,13 +21,13 @@ defmodule AcmeBank.WalletTest do
     test "updates wallet summary" do
       {:ok, account} = Accounts.create_account(%{name: "My account"})
 
-      Enum.each([10000, 20000, 50000], fn amount ->
+      Enum.each([10_000, 20_000, 50_000], fn amount ->
         params = %{account_id: account.id, amount_cents: amount}
         {:ok, _} = Wallet.place_money(params)
       end)
 
       account = Accounts.get_account(account.id)
-      assert account.current_wallet_cents == 80000
+      assert account.current_wallet_cents == 80_000
     end
 
     test "with errors, does not change wallet summary" do
@@ -97,57 +97,57 @@ defmodule AcmeBank.WalletTest do
     test "creates transactions" do
       {:ok, account_a} = Accounts.create_account(%{name: "My account"})
       {:ok, account_b} = Accounts.create_account(%{name: "My account B"})
-      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50000})
+      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50_000})
 
       response =
         Wallet.transfer_money(%{
           source_account_id: account_a.id,
           destination_account_id: account_b.id,
-          amount_cents: 25000
+          amount_cents: 25_000
         })
 
       assert {:ok, transaction_a, transaction_b} = response
       assert transaction_a.id != nil
       assert transaction_a.account_id == account_a.id
-      assert transaction_a.amount_cents == -25000
+      assert transaction_a.amount_cents == -25_000
       assert transaction_a.type == :transfer
 
       assert transaction_b.id != nil
       assert transaction_b.account_id == account_b.id
-      assert transaction_b.amount_cents == 25000
+      assert transaction_b.amount_cents == 25_000
       assert transaction_b.type == :transfer
     end
 
     test "updates wallet summaries" do
       {:ok, account_a} = Accounts.create_account(%{name: "My account"})
       {:ok, account_b} = Accounts.create_account(%{name: "My account B"})
-      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50000})
+      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50_000})
       {:ok, _} = Wallet.place_money(%{account_id: account_b.id, amount_cents: 3000})
 
       {:ok, _, _} =
         Wallet.transfer_money(%{
           source_account_id: account_a.id,
           destination_account_id: account_b.id,
-          amount_cents: 25000
+          amount_cents: 25_000
         })
 
       account_a = Accounts.get_account(account_a.id)
       account_b = Accounts.get_account(account_b.id)
 
-      assert account_a.current_wallet_cents == 25000
-      assert account_b.current_wallet_cents == 28000
+      assert account_a.current_wallet_cents == 25_000
+      assert account_b.current_wallet_cents == 28_000
     end
 
     test "insufficient funds validation" do
       {:ok, account_a} = Accounts.create_account(%{name: "My account"})
       {:ok, account_b} = Accounts.create_account(%{name: "My account B"})
-      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50000})
+      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50_000})
 
       response =
         Wallet.transfer_money(%{
           source_account_id: account_a.id,
           destination_account_id: account_b.id,
-          amount_cents: 80000
+          amount_cents: 80_000
         })
 
       assert {:error, reason} = response
@@ -160,21 +160,21 @@ defmodule AcmeBank.WalletTest do
     test "with errors, does not change wallet summaries" do
       {:ok, account_a} = Accounts.create_account(%{name: "My account"})
       {:ok, account_b} = Accounts.create_account(%{name: "My account B"})
-      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50000})
-      {:ok, _} = Wallet.place_money(%{account_id: account_b.id, amount_cents: 30000})
+      {:ok, _} = Wallet.place_money(%{account_id: account_a.id, amount_cents: 50_000})
+      {:ok, _} = Wallet.place_money(%{account_id: account_b.id, amount_cents: 30_000})
 
       {:error, _} =
         Wallet.transfer_money(%{
           source_account_id: account_a.id,
           destination_account_id: account_b.id,
-          amount_cents: 80000
+          amount_cents: 80_000
         })
 
       account_a = Accounts.get_account(account_a.id)
       account_b = Accounts.get_account(account_b.id)
 
-      assert account_a.current_wallet_cents == 50000
-      assert account_b.current_wallet_cents == 30000
+      assert account_a.current_wallet_cents == 50_000
+      assert account_b.current_wallet_cents == 30_000
     end
 
     test "validates blank params" do

@@ -1,5 +1,6 @@
 defmodule AcmeBank.RepoCase do
   use ExUnit.CaseTemplate
+  alias Ecto.Adapters.SQL.Sandbox
 
   using do
     quote do
@@ -14,10 +15,10 @@ defmodule AcmeBank.RepoCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(AcmeBank.Repo)
+    :ok = Sandbox.checkout(AcmeBank.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(AcmeBank.Repo, {:shared, self()})
+      Sandbox.mode(AcmeBank.Repo, {:shared, self()})
     end
 
     :ok

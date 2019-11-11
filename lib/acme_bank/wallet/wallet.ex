@@ -1,8 +1,8 @@
 defmodule AcmeBank.Wallet do
   alias AcmeBank.Accounts.Account
-  alias AcmeBank.{WalletBehaviour, Repo}
-  alias AcmeBank.Wallet.{Transaction, Transfer}
   alias AcmeBank.Kit.Changeset
+  alias AcmeBank.{Repo, WalletBehaviour}
+  alias AcmeBank.Wallet.{Transaction, Transfer}
   alias Ecto.Multi
 
   import Ecto.Query
