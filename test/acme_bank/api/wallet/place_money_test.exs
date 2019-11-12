@@ -38,7 +38,17 @@ defmodule AcmeBank.Api.Wallet.PlaceMoneyTest do
 
     assert conn.status == 200
 
-    assert conn.resp_body == Jason.encode!(transaction)
+    assert conn.resp_body ==
+             Jason.encode!(
+               Map.take(transaction, [
+                 :id,
+                 :amount_cents,
+                 :account_id,
+                 :type,
+                 :inserted_at,
+                 :updated_at
+               ])
+             )
   end
 
   test "invalid request" do
