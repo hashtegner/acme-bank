@@ -1,11 +1,11 @@
 # AcmeBank
 ![](https://github.com/alesshh/acme-bank/workflows/Elixir%20CI/badge.svg)
 
-A fictional bank app. Demo at [https://acme-bankx.herokuapp.com](https://acme-bankx.herokuapp.com)
+A fictional bank app. Demo at [https://acme-bankx.herokuapp.com](https://acme-bankx.herokuapp.com).
 
 ## About
 
-A [POC](https://en.wikipedia.org/wiki/Proof_of_concept) app writing in [Elixir](https://elixir-lang.org/) only using [Ecto](https://github.com/elixir-ecto/ecto) and [Plug](https://github.com/elixir-plug/plug).
+This app is a [POC](https://en.wikipedia.org/wiki/Proof_of_concept) writing in [Elixir](https://elixir-lang.org/) only using [Ecto](https://github.com/elixir-ecto/ecto) and [Plug](https://github.com/elixir-plug/plug).
 
 ## Getting started
 
